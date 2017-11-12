@@ -1,0 +1,7 @@
+C:\Users\dmitrii\Documents\Visual Studio 2017\Projects\DualSimplexMethod\DualSimplexMethod\bin\Debug\DualSimplexMethod.exe.config
+C:\Users\dmitrii\Documents\Visual Studio 2017\Projects\DualSimplexMethod\DualSimplexMethod\bin\Debug\DualSimplexMethod.exe
+C:\Users\dmitrii\Documents\Visual Studio 2017\Projects\DualSimplexMethod\DualSimplexMethod\bin\Debug\DualSimplexMethod.pdb
+C:\Users\dmitrii\Documents\Visual Studio 2017\Projects\DualSimplexMethod\DualSimplexMethod\obj\Debug\DualSimplexMethod.csprojResolveAssemblyReference.cache
+C:\Users\dmitrii\Documents\Visual Studio 2017\Projects\DualSimplexMethod\DualSimplexMethod\obj\Debug\DualSimplexMethod.csproj.CoreCompileInputs.cache
+C:\Users\dmitrii\Documents\Visual Studio 2017\Projects\DualSimplexMethod\DualSimplexMethod\obj\Debug\DualSimplexMethod.exe
+C:\Users\dmitrii\Documents\Visual Studio 2017\Projects\DualSimplexMethod\DualSimplexMethod\obj\Debug\DualSimplexMethod.pdb
