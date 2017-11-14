@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 
 namespace DualSimplexMethod
@@ -15,8 +13,8 @@ namespace DualSimplexMethod
         static private void ParseFunction(string function, out IList<double> coefficientsOfFunction)
         {
             MatchCollection collection = patternOfFunction.Matches(function);
-            coefficientsOfFunction = new List<double>();
 
+            coefficientsOfFunction = new List<double>();
             foreach (Match match in collection)
             {
                 if (match.Value != String.Empty)
@@ -58,7 +56,7 @@ namespace DualSimplexMethod
             return coefficientsOfFunction;
         }
 
-        static private void PrintSimplexMatrix(IList<double> coefficientsOfFunction, IList<List<double>> simplexMatrixCoefficients, IList<double> deltaMatrix, IList<string> tetaMatrix)
+        static private void PrintSimplexMatrix(IList<double> coefficientsOfFunction, IList<List<double>> simplexMatrixCoefficients, IList<double> deltaOfMatrix, IList<string> tetaOfMatrix)
         {
             string s = String.Format(" {0,6} | {1,6} | {2,6} |", "B", "CN", "Xb");
             int n = coefficientsOfFunction.Count;
@@ -81,14 +79,14 @@ namespace DualSimplexMethod
             Console.WriteLine(new String('-', s.Length));
 
             s = String.Format(" {0,6} | {1,6} | {2,6} |", "", "", "delta");
-            foreach (double item in deltaMatrix)
+            foreach (double item in deltaOfMatrix)
             {
                 s += String.Format(" {0,6:F2} |", item);
             }
             Console.WriteLine(s);
 
             s = String.Format(" {0,6} | {1,6} | {2,6} |", "", "", "teta");
-            foreach (string item in tetaMatrix)
+            foreach (string item in tetaOfMatrix)
             {
                 if (item != "-")
                 {
@@ -103,7 +101,7 @@ namespace DualSimplexMethod
             Console.WriteLine("\n");
         }
 
-        static private bool Check(IList<double> coefficientOfFunction, IList<List<double>> simplexMatrixCoefficients, ref int l)
+        static private bool Check(IList<double> coefficientsOfFunction, IList<List<double>> simplexMatrixCoefficients, ref int l)
         {
             int n = simplexMatrixCoefficients.Count, m = simplexMatrixCoefficients[0].Count;
             double minB = double.MaxValue, minA = double.MaxValue;
@@ -140,32 +138,31 @@ namespace DualSimplexMethod
                     f += simplexMatrixCoefficients[i][1] * simplexMatrixCoefficients[i][2];
                 }
 
-                n = coefficientOfFunction.Count;
-                double[] resVector = new double[n];
-                for (int i = 0; i < n; i++)
+                m = coefficientsOfFunction.Count;
+                double[] resVector = new double[m];
+                for (int i = 0; i < m; i++)
                 {
                     resVector[i] = 0;
                 }
 
-                for (int i = 0; i < simplexMatrixCoefficients.Count; i++)
+                for (int i = 0; i < n; i++)
                 {
                     resVector[Convert.ToInt32(simplexMatrixCoefficients[i][0]) - 1] = simplexMatrixCoefficients[i][2];
                 }
 
                 Console.WriteLine("Solution found!");
-                Console.WriteLine($"f = {-f}");
-                Console.WriteLine("\n");
+                Console.WriteLine($"f = {-f} \n");
 
                 string s = "X=(";
-                for (int i = 0; i < n; i++)
+                for (int i = 0; i < m; i++)
                 {
-                    if (i == n - 1)
+                    if (i == m - 1)
                     {
                         s += resVector[i].ToString() + ")";
                     }
                     else
                     {
-                        s += resVector[i].ToString()+"; ";
+                        s += resVector[i].ToString() + "; ";
                     }
                 }
                 Console.WriteLine(s);
@@ -176,9 +173,9 @@ namespace DualSimplexMethod
             return true;
         }
 
-        static private void JordanGaussMethod(IList<double> coefficientOfFunction, IList<List<double>> simplexMatrixCoefficients, ref IList<double> deltaMatrix, ref IList<string> tetaMatrix, int l)
+        static private void JordanGaussMethod(IList<double> coefficientsOfFunction, IList<List<double>> simplexMatrixCoefficients, ref IList<double> deltaOfMatrix, ref IList<string> tetaOfMatrix, int l)
         {
-            int n = coefficientOfFunction.Count, m = simplexMatrixCoefficients.Count;
+            int n = coefficientsOfFunction.Count, m = simplexMatrixCoefficients.Count;
             double sum = 0;
             for (int i = 0; i < n; i++)
             {
@@ -187,15 +184,15 @@ namespace DualSimplexMethod
                 {
                     sum += simplexMatrixCoefficients[j][1] * simplexMatrixCoefficients[j][i + 3];
                 }
-                deltaMatrix[i] = sum - coefficientOfFunction[i];
+                deltaOfMatrix[i] = sum - coefficientsOfFunction[i];
 
                 if (simplexMatrixCoefficients[l][i + 3] < 0)
                 {
-                    tetaMatrix[i] = (deltaMatrix[i] / (-simplexMatrixCoefficients[l][i + 3])).ToString();
+                    tetaOfMatrix[i] = (deltaOfMatrix[i] / (-simplexMatrixCoefficients[l][i + 3])).ToString();
                 }
                 else
                 {
-                    tetaMatrix[i] = "-";
+                    tetaOfMatrix[i] = "-";
                 }
             }
         }
@@ -219,17 +216,17 @@ namespace DualSimplexMethod
             }
         }
 
-        static private void CalcSimplexMatrix(IList<double> coefficientOfFunction, ref IList<List<double>> simplexMatrixCoefficients, ref IList<double> deltaMatrix, ref IList<string> tetaMatrix, ref int l)
+        static private void CalcSimplexMatrix(IList<double> coefficientsOfFunction, ref IList<List<double>> simplexMatrixCoefficients, ref IList<double> deltaOfMatrix, ref IList<string> tetaOfMatrix, ref int l)
         {
-            int n = tetaMatrix.Count, k = 0;
+            int n = tetaOfMatrix.Count, k = 0;
             double minTeta = double.MaxValue;
             for (int i = 0; i < n; i++)
             {
-                if (tetaMatrix[i] != "-")
+                if (tetaOfMatrix[i] != "-")
                 {
-                    if (double.Parse(tetaMatrix[i]) < minTeta)
+                    if (double.Parse(tetaOfMatrix[i]) < minTeta)
                     {
-                        minTeta = double.Parse(tetaMatrix[0]);
+                        minTeta = double.Parse(tetaOfMatrix[i]);
                         k = i;
                     }
                 }
@@ -237,7 +234,7 @@ namespace DualSimplexMethod
 
             n = simplexMatrixCoefficients[l].Count;
             simplexMatrixCoefficients[l][0] = k + 1;
-            simplexMatrixCoefficients[l][1] = coefficientOfFunction[k];
+            simplexMatrixCoefficients[l][1] = coefficientsOfFunction[k];
             double lkElement = simplexMatrixCoefficients[l][k + 3];
             for (int i = 2; i < n; i++)
             {
@@ -246,16 +243,16 @@ namespace DualSimplexMethod
 
             GaussMethod(ref simplexMatrixCoefficients, l, k);
 
-            JordanGaussMethod(coefficientOfFunction, simplexMatrixCoefficients, ref deltaMatrix, ref tetaMatrix, l);
+            JordanGaussMethod(coefficientsOfFunction, simplexMatrixCoefficients, ref deltaOfMatrix, ref tetaOfMatrix, l);
 
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine("Enter function:");
-            IList<double> coefficientOfFunction;
-            coefficientOfFunction = InputFunction();
-            int numberOfCoefficient = coefficientOfFunction.Count;
+            IList<double> coefficientsOfFunction;
+            coefficientsOfFunction = InputFunction();
+            int numberOfCoefficients = coefficientsOfFunction.Count;
 
             Console.WriteLine("Enter the number of terms:");
             int numberOfTerms = 0;
@@ -278,8 +275,9 @@ namespace DualSimplexMethod
             for (int i = 0; i < numberOfTerms; i++)
             {
                 canonicalMatrix.Add((List<double>)InputFunction());
-                coefficientOfFunction.Add(0d);
+                coefficientsOfFunction.Add(0d);
             }
+            Console.WriteLine();
 
             IList<List<double>> simplexMatrixCoefficients = canonicalMatrix;
             for (int i = 0; i < numberOfTerms; i++)
@@ -299,26 +297,28 @@ namespace DualSimplexMethod
 
                 }
                 simplexMatrixCoefficients[i].Insert(0, 0);
-                simplexMatrixCoefficients[i].Insert(0, numberOfCoefficient + (i + 1));
+                simplexMatrixCoefficients[i].Insert(0, numberOfCoefficients + (i + 1));
             }
 
-            IList<double> deltaMatrix = new List<double>();
-            IList<string> tetaMatrix = new List<string>();
-            for (int i = 0; i < coefficientOfFunction.Count; i++)
+            IList<double> deltaOfMatrix = new List<double>();
+            IList<string> tetaOfMatrix = new List<string>();
+            int n = coefficientsOfFunction.Count;
+            for (int i = 0; i < n; i++)
             {
-                deltaMatrix.Add(0);
-                tetaMatrix.Add("-");
+                deltaOfMatrix.Add(0);
+                tetaOfMatrix.Add("-");
             }
+
             int l = 0;
-            Check(coefficientOfFunction, simplexMatrixCoefficients, ref l);
-            JordanGaussMethod(coefficientOfFunction, simplexMatrixCoefficients, ref deltaMatrix, ref tetaMatrix, l);
-            PrintSimplexMatrix(coefficientOfFunction, simplexMatrixCoefficients, deltaMatrix, tetaMatrix);
+            Check(coefficientsOfFunction, simplexMatrixCoefficients, ref l);
+            JordanGaussMethod(coefficientsOfFunction, simplexMatrixCoefficients, ref deltaOfMatrix, ref tetaOfMatrix, l);
+            PrintSimplexMatrix(coefficientsOfFunction, simplexMatrixCoefficients, deltaOfMatrix, tetaOfMatrix);
 
             while (true)
             {
-                if (!Check(coefficientOfFunction, simplexMatrixCoefficients, ref l)) break;
-                CalcSimplexMatrix(coefficientOfFunction, ref simplexMatrixCoefficients, ref deltaMatrix, ref tetaMatrix, ref l);
-                PrintSimplexMatrix(coefficientOfFunction, simplexMatrixCoefficients, deltaMatrix, tetaMatrix);
+                if (!Check(coefficientsOfFunction, simplexMatrixCoefficients, ref l)) break;
+                CalcSimplexMatrix(coefficientsOfFunction, ref simplexMatrixCoefficients, ref deltaOfMatrix, ref tetaOfMatrix, ref l);
+                PrintSimplexMatrix(coefficientsOfFunction, simplexMatrixCoefficients, deltaOfMatrix, tetaOfMatrix);
             }
 
             Console.ReadKey();
